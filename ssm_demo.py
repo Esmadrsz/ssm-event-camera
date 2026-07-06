@@ -71,3 +71,20 @@ plt.tight_layout()
 plt.savefig('ssm_output.png')
 plt.show()
 print("Done! Graph saved as ssm_output.png")
+
+# Training loop
+optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
+criterion = nn.MSELoss()
+
+print("Training SSM model...")
+for epoch in range(50):
+    optimizer.zero_grad()
+    output = model(x)
+    # target: predict next timestep
+    loss = criterion(output[:, :-1, :], x[:, 1:, :])
+    loss.backward()
+    optimizer.step()
+    if epoch % 10 == 0:
+        print(f"Epoch {epoch}, Loss: {loss.item():.4f}")
+
+print("Training complete!")
